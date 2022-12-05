@@ -27,6 +27,15 @@ fn main() {
     println!();
 
     tipos_datos();
+    println!();
+    println!();
+    println!();
+
+    funcion_param(5);
+    println!();
+    println!();
+    println!();
+    println!("{}", ocho());
 }
 
 fn tipos_datos() {
@@ -46,4 +55,13 @@ fn tipos_datos() {
 
     let array: [i32; 3] = [1, 2, 3];
     println!("El segundo elemento es: {}", array[1])
+}
+
+fn funcion_param(i: i32) {
+    println!("El valor es {}", i)
+}
+
+fn ocho() -> i8 {
+    // return 8;
+    8
 }
