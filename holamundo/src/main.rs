@@ -5,10 +5,13 @@ fn main() {
     let x2 = 3;
     println!("La variable es {}", x);
     println!("La variable es {}", x2);
+    println!();
+    println!();
+    println!();
 
     // variables mutables
     //let mut y_mut = 5;
-    
+
     // constantes
     const PI: f32 = 31.1416;
     println!("PI es {}....", PI);
@@ -19,4 +22,28 @@ fn main() {
     println!("La variable es {}", var_redefinida);
     let var_redefinida = "4";
     println!("La variable es {}", var_redefinida);
+    println!();
+    println!();
+    println!();
+
+    tipos_datos();
+}
+
+fn tipos_datos() {
+    println!("Tenemos 4 grandes tipos");
+    println!("*  Enteros");
+    println!("*  Coma flotante");
+    println!("*  Booleanos");
+    println!("*  Caracteres");
+
+    let martini_emoji = '\u{1F378}';
+    println!("El emoji es {}", martini_emoji);
+
+    // tuplas y arrays
+    let tupla: (i32, &str, i32, i32) = (1, "2", 3, 4);
+    let (a, _, _, _) = tupla;
+    println!("El primer valor de la tupla es: {}", a);
+
+    let array: [i32; 3] = [1, 2, 3];
+    println!("El segundo elemento es: {}", array[1])
 }
