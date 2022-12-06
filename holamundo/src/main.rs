@@ -1,3 +1,5 @@
+mod bucles;
+
 fn main() {
     println!("Hola, mundo!");
 
@@ -36,6 +38,8 @@ fn main() {
     println!();
     println!();
     println!("{}", ocho());
+
+    println!("{}", bucles::fun_ocho());
 }
 
 fn tipos_datos() {
