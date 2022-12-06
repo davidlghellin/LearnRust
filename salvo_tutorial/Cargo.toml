@@ -6,5 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-salvo = "*"
+salvo = { version = "*", features = ["serve-static"] }
 tokio = { version = "1", features = ["macros"] }
+# https://salvo.rs/book/middlewares/serve-static.html#config-cargo-toml
