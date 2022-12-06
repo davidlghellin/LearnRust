@@ -9,3 +9,4 @@ edition = "2021"
 salvo = { version = "*", features = ["serve-static"] }
 tokio = { version = "1", features = ["macros"] }
 # https://salvo.rs/book/middlewares/serve-static.html#config-cargo-toml
+rust-embed="6.4.2"
