@@ -40,6 +40,10 @@ fn main() {
     println!("{}", ocho());
 
     println!("{}", bucles::fun_ocho());
+
+    let v = vec![1,2,3,4];
+    println!("vector: {:?}",v);
+
 }
 
 fn tipos_datos() {
