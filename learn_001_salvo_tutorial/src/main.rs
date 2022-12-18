@@ -18,7 +18,7 @@ async fn service() -> &'static str {
 
 //mi carpeta de fronted se encuenta
 #[derive(RustEmbed)]
-#[folder = "../salvo_tutorial_client/client/dist/"]
+#[folder = "../learn_001_salvo_tutorial_client/client/dist/"]
 struct Assets;
 
 #[tokio::main]
