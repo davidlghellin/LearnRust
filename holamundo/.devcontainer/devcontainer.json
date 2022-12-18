@@ -8,7 +8,11 @@
 	},
 	"extensions": [
 		"rust-lang.rust-analyzer"
+		,"swellaby.vscode-rust-test-adapter"
+		,"dtsvet.vscode-wasm"
 		,"oderwat.indent-rainbow"
+		,"usernamehw.errorlens"
+		,"vscode-icons-team.vscode-icons"
 	]
 
 
