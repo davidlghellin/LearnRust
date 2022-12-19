@@ -10,5 +10,4 @@ docker run   -it my-rust-app
 |------------------|--------|
 | DockerfileSimple | 1.32GB |
 | Dockerfile       | 73MB   |
-
-
+| DockerfileAlpine | 10.8MB |
