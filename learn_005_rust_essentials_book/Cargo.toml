@@ -10,4 +10,4 @@ edition = "2021"
 
 [[bin]]
 name = "cap04"
-path = "src/cap04/input.rs"
+path = "src/cap04/main.rs"
