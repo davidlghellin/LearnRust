@@ -7,7 +7,13 @@ authors = ["david"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+rand = "0.8.5"
+colored="2.0.0"
 
 [[bin]]
 name = "cap01"
 path = "src/cap01/main.rs"
+
+[[bin]]
+name = "cap02"
+path = "src/cap02/main.rs"
