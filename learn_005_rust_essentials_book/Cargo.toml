@@ -7,7 +7,12 @@ edition = "2021"
 
 
 [dependencies]
+num-traits = "0.2.15"
 
 [[bin]]
 name = "cap04"
 path = "src/cap04/main.rs"
+
+[[bin]]
+name = "cap05"
+path = "src/cap05/main.rs"
