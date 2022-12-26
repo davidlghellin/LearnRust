@@ -25,3 +25,7 @@ path = "src/cap03/main.rs"
 [[bin]]
 name = "cap04"
 path = "src/cap04/main.rs"
+
+[[bin]]
+name = "cap05"
+path = "src/cap05/main.rs"
