@@ -17,7 +17,7 @@ for i in $(seq 1 100); do curl http://localhost:8080/david ; done
 
 Post
 ```sh
-curl -X POST http://localhost:8080/api/playlist/ -H 'Content-Type: application/json' -d '{"name": "Diciembre 2020", "song": "trance"}'
+curl -X POST http://localhost:8080/api/playlist -H 'Content-Type: application/json' -d '{"name": "Diciembre 2020", "song": "trance"}'
 
 http post 127.0.0.1:8080/api/playlist/  name="Diciembre 2020" song="trance"
 ```
@@ -33,3 +33,10 @@ docker run --network host -p 8080:8080 -e PORT=8080 -e HOST="127.0.0.1" actix-we
 ```
 Hemos tenido que añadir el `--network host` para poder hacer los curls.
 Además como hemos creado lo de las variables de entorno debemos pasarlas.
+
+##
+Para comprobar un benchmark
+```
+sudo apt install apache2-utils
+ab -T "application/json" -n 1000 -c 1000 127.0.0.1:8080/api/playlist
+```

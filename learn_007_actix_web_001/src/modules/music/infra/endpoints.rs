@@ -1,47 +1,41 @@
+use std::sync::MutexGuard;
+
 use crate::modules::music::domain::Song;
 
 use super::dtos::{CreatePlaylist, Info};
 use actix_web::{get, post, web, Responder};
 
 use super::super::domain::Playlist;
+use crate::state::MyState;
 
 #[get("/playlist")]
-async fn playlist() -> impl Responder {
-    let mut playlist: Vec<Playlist> = vec![];
-
-    let p1: Playlist = Playlist {
-        name: "Diciembre 2022".to_string(),
-        songs: vec![],
-    };
-    playlist.push(p1);
+async fn playlist(data: web::Data<MyState>) -> impl Responder {
+    // Vamos a tomar la variable y la bloqueamos
+    let playlist: MutexGuard<Vec<Playlist>> = data.playlist.lock().expect("bad state");
 
     //HttpResponse::Ok(web::Json(playlist) // revisar como devolver en https://actix.rs/docs/response/#json-response
-    web::Json(playlist)
+    web::Json(playlist.clone())
 }
 
 // extractores
 // https://actix.rs/docs/extractors/#path
 
 #[get("/playlist/{id}")]
-async fn get_playlist(info: web::Path<Info>) -> impl Responder {
-    let playl: Vec<Playlist> = vec![
-        Playlist {
-            name: "Enero 2023".to_string(),
-            songs: vec![],
-        },
-        Playlist {
-            name: "Febrero 2023".to_string(),
-            songs: vec![],
-        },
-    ];
+async fn get_playlist(info: web::Path<Info>, data: web::Data<MyState>) -> impl Responder {
+    let playl: MutexGuard<Vec<Playlist>> = data.playlist.lock().expect("bad state");
 
     let p1: Playlist = playl[info.id].clone();
 
     web::Json(p1)
 }
 
-#[post("/playlist/")]
-async fn create_playlist(dto: web::Json<CreatePlaylist>) -> impl Responder {
+#[post("/playlist")]
+async fn create_playlist(
+    dto: web::Json<CreatePlaylist>,
+    data: web::Data<MyState>,
+) -> impl Responder {
+    let mut play: MutexGuard<Vec<Playlist>> = data.playlist.lock().expect("bad state");
+
     let p1 = Playlist {
         name: dto.name.clone(),
         songs: vec![Song {
@@ -50,6 +44,7 @@ async fn create_playlist(dto: web::Json<CreatePlaylist>) -> impl Responder {
             duration_ms: 0,
         }],
     };
+    play.push(p1.clone());
 
     web::Json(p1)
 }
