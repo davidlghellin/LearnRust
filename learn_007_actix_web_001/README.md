@@ -21,3 +21,15 @@ curl -X POST http://localhost:8080/api/playlist/ -H 'Content-Type: application/j
 
 http post 127.0.0.1:8080/api/playlist/  name="Diciembre 2020" song="trance"
 ```
+
+## Docker
+Para crear el docker haremos:
+```sh
+docker build -t actix-web-docker .
+```
+Para ejecutarlo lanzaremos el siguiente comando
+```sh
+docker run --network host -p 8080:8080 -e PORT=8080 -e HOST="127.0.0.1" actix-web-docker-example
+```
+Hemos tenido que añadir el `--network host` para poder hacer los curls.
+Además como hemos creado lo de las variables de entorno debemos pasarlas.
