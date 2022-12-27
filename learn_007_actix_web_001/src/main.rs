@@ -5,6 +5,8 @@ use log::info;
 
 use learn_007_actix_web_001::config::{read_config, Config};
 use learn_007_actix_web_001::infra;
+use learn_007_actix_web_001::modules::music;
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -25,7 +27,8 @@ async fn main() -> std::io::Result<()> {
                 // hacemos que todo esté dentro de /api
                 web::scope("/api")
                     // hemos añadido la configuración de la infra
-                    .configure(infra::endpoints::config),
+                    .configure(infra::endpoints::config)
+                    .configure(music::infra::endpoints::config)
             )
     })
     .bind((configuracion.host, configuracion.puerto))?
