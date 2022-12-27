@@ -1,25 +1,28 @@
-use actix_web::{web, App, HttpRequest, HttpServer, Responder};
+use actix_web::{web, App, HttpServer};
 
 use actix_web::middleware::Logger;
 use log::info;
 
-async fn greet(req: HttpRequest) -> impl Responder {
-    let name = req.match_info().get("name").unwrap_or("World");
-    format!("Hello {}!", &name)
-}
+use learn_007_actix_web_001::infra::endpoints::config;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-
     std::env::set_var("RUST_LOG", "info");
     env_logger::init();
     info!("Activamos logs");
 
     HttpServer::new(|| {
         App::new()
+            // añadimos el log
             .wrap(Logger::default())
-            .route("/", web::get().to(greet))
-            .route("/{name}", web::get().to(greet))
+            // al endpoin /hola le decimos que vamos a aceptar peticiones get y vamos a devolver esa cadena
+            //.route("/hola", web::get().to(|| async { "Hola mundo\n" }))
+            .service(
+                // hacemos que todo esté dentro de /api
+                web::scope("/api")
+                    // hemos añadido la configuración de la infra
+                    .configure(config),
+            )
     })
     .bind(("127.0.0.1", 8080))?
     .run()
