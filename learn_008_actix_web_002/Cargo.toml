@@ -10,3 +10,6 @@ actix-web = "4"
 actix-rt = "2.7.0"
 log = "0.4.16"
 env_logger = "0.10.0"
+dotenv = "0.15.0"
+uuid = { version = "1.2.2", features = ["serde", "v4"] }
+chrono = { version = "0.4.23", features = ["serde"] }

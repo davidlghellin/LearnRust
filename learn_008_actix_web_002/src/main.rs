@@ -1,3 +1,6 @@
+mod user;
+mod repository;
+
 use std::sync::atomic::AtomicU16;
 use std::sync::Arc;
 
@@ -21,6 +24,13 @@ async fn healt(_req: HttpRequest) -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv::dotenv().ok();
+    let puerto: u16 = std::env::var("PORT")
+        .expect("Puerto no definido")
+        .parse()
+        .expect("No puedo convertir, puerto mal definido");
+    let host = std::env::var("HOST").expect("Puerto no definido");
+
     // Añadimos los logs
     std::env::set_var("RUST_LOG", "info");
     env_logger::init();
@@ -44,7 +54,8 @@ async fn main() -> std::io::Result<()> {
             .route("/str", web::get().to(|| async { "Hola Rust {}" }))
             .route("/{name}", web::get().to(greet))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind((host, puerto))?
     .run()
     .await
+
 }

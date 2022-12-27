@@ -12,7 +12,8 @@
 		,"dtsvet.vscode-wasm"
 		,"oderwat.indent-rainbow"
 		,"usernamehw.errorlens"
-		,"vscode-icons-team.vscode-icons"
+		//,"vscode-icons-team.vscode-icons"
+		,"PKief.material-icon-theme"
 	]
 
 
