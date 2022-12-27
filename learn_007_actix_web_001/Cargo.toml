@@ -1,0 +1,12 @@
+[package]
+name = "learn_007_actix_web_001"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "^4"
+actix-rt = "2.7.0"
+log = "0.4.16"
+env_logger ="0.10.0"
