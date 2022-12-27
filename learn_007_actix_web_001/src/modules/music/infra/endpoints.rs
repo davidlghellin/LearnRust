@@ -1,5 +1,7 @@
-use actix_web::{get, web, Responder};
-use serde::Deserialize;
+use crate::modules::music::domain::Song;
+
+use super::dtos::{CreatePlaylist, Info};
+use actix_web::{get, post, web, Responder};
 
 use super::super::domain::Playlist;
 
@@ -19,10 +21,6 @@ async fn playlist() -> impl Responder {
 
 // extractores
 // https://actix.rs/docs/extractors/#path
-#[derive(Deserialize)]
-struct Info {
-    id: usize,
-}
 
 #[get("/playlist/{id}")]
 async fn get_playlist(info: web::Path<Info>) -> impl Responder {
@@ -42,7 +40,22 @@ async fn get_playlist(info: web::Path<Info>) -> impl Responder {
     web::Json(p1)
 }
 
+#[post("/playlist/")]
+async fn create_playlist(dto: web::Json<CreatePlaylist>) -> impl Responder {
+    let p1 = Playlist {
+        name: dto.name.clone(),
+        songs: vec![Song {
+            name: dto.song.clone(),
+            autor: String::from("Desconocido"),
+            duration_ms: 0,
+        }],
+    };
+
+    web::Json(p1)
+}
+
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(playlist);
     cfg.service(get_playlist);
+    cfg.service(create_playlist);
 }
