@@ -1,5 +1,5 @@
-mod user;
 mod repository;
+mod user;
 
 use std::sync::atomic::AtomicU16;
 use std::sync::Arc;
@@ -9,6 +9,8 @@ use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 
 use actix_web::middleware::Logger;
 use log::info;
+use repository::MemoryRepository;
+use repository::Repository;
 
 async fn greet(req: HttpRequest) -> impl Responder {
     let name = req.match_info().get("name").unwrap_or("Mundo");
@@ -20,6 +22,23 @@ async fn healt(_req: HttpRequest) -> impl Responder {
         .customize()
         .with_status(StatusCode::OK)
         .insert_header(("x-hello", "world"))
+}
+
+async fn get_user(req: HttpRequest) -> HttpResponse {
+    if let Some(user_id) = req.match_info().get("user_id") {
+        match uuid::Uuid::parse_str(user_id) {
+            Ok(parsed_user_id) => {
+                let memorepo = MemoryRepository::default();
+                match memorepo.get_user(parsed_user_id) {
+                    Ok(user) => HttpResponse::Ok().json(user),
+                    Err(_) => HttpResponse::NotFound().body("Not found"),
+                }
+            }
+            Err(err) => HttpResponse::BadRequest().body(err.to_string()),
+        }
+    } else {
+        HttpResponse::NotFound().body("Not Found")
+    }
 }
 
 #[actix_web::main]
@@ -48,6 +67,7 @@ async fn main() -> std::io::Result<()> {
         //let index_thread = thread_counter.load(std::sync::atomic::Ordering::SeqCst);
         App::new()
             .wrap(Logger::default()) // añadir los logs
+            .service(web::resource("/user/{user_id}").route(web::get().to(get_user)))
             .route("/", web::get().to(greet))
             .route("/health", web::get().to(HttpResponse::Ok))
             .route("/health2", web::get().to(healt))
@@ -57,5 +77,4 @@ async fn main() -> std::io::Result<()> {
     .bind((host, puerto))?
     .run()
     .await
-
 }
