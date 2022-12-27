@@ -11,7 +11,6 @@ use actix_web::middleware::Logger;
 use log::info;
 use repository::MemoryRepository;
 use repository::Repository;
-use uuid::Uuid;
 
 async fn greet(req: HttpRequest) -> impl Responder {
     let name = req.match_info().get("name").unwrap_or("Mundo");
@@ -25,11 +24,15 @@ async fn healt(_req: HttpRequest) -> impl Responder {
         .insert_header(("x-hello", "world"))
 }
 
-async fn get_user(user_id: web::Path<Uuid>) -> HttpResponse {
-    let memorepo = MemoryRepository::default();
-    match memorepo.get_user(&user_id) {
-        Ok(user) => HttpResponse::Ok().json(user),
-        Err(_) => HttpResponse::NotFound().body("Not found"),
+async fn get_user(user_id: web::Path<String>) -> HttpResponse {
+    if let Ok(parse_user_id) = uuid::Uuid::parse_str(&user_id) {
+        let memorepo = MemoryRepository::default();
+        match memorepo.get_user(&parse_user_id) {
+            Ok(user) => HttpResponse::Ok().json(user),
+            Err(_) => HttpResponse::NotFound().body("Not found"),
+        }
+    } else {
+        HttpResponse::BadRequest().body("Invalid UIID")
     }
 }
 

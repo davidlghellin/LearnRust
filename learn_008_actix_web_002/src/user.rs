@@ -1,5 +1,5 @@
 use chrono::{DateTime, NaiveDate, Utc};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
@@ -14,7 +14,7 @@ pub struct User {
 impl User {
     pub fn new(name: String, birth_date_ymd: (i32, u32, u32)) -> User {
         let (year, month, day) = birth_date_ymd;
-        let ui =uuid::Uuid::parse_str("af08097e-e5b2-4ee6-a5b3-d6a0aaa72140").unwrap();
+        let ui = uuid::Uuid::parse_str("af08097e-e5b2-4ee6-a5b3-d6a0aaa72140").unwrap();
         Self {
             id: ui, //uuid::Uuid::new_v4(),
             name,
