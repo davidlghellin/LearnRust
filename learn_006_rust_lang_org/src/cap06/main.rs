@@ -1,12 +1,18 @@
+use log::{debug, info};
+
+#[derive(Debug)]
 enum DirIps {
     V4,
     V6,
 }
 fn route(ip_tipo: DirIps) {}
+
+#[derive(Debug)]
 enum DirIps2 {
     V4(u8, u8, u8, u8),
     V6(String),
 }
+#[derive(Debug)]
 struct IpDireccion {
     tipo: DirIps,
     ip_real: String,
@@ -21,7 +27,7 @@ enum Message {
 //Podemos hacer funciones como en los struct en los enum
 impl Message {
     fn una_fun() {
-        println!("F")
+        info!("F")
     }
 }
 
@@ -32,15 +38,24 @@ struct MoveMessage {
 }
 
 fn main() {
+
+    std::env::set_var("RUST_LOG", "info");
+    env_logger::init();
+    info!("Activamos logs");
+
     let ip_cuatro: DirIps = DirIps::V4;
     let ip_seis: DirIps = DirIps::V6;
+    info!("{:?}", ip_cuatro);
+    info!("{:?}", ip_seis);
 
     let localhost = IpDireccion {
         tipo: DirIps::V4,
         ip_real: String::from("127.0.0.1"),
     };
+    info!("{:?}", localhost);
 
     let localhost2 = DirIps2::V4(127, 0, 0, 1);
+    info!("{:?}", localhost2);
 
     // ------
     // Option
@@ -49,20 +64,23 @@ fn main() {
     let some_string: Option<&str> = Some("Cinco");
 
     let no_number: Option<i32> = None;
+    info!("{:?}", some_number);
+    info!("{:?}", some_string);
+    info!("{:?}", no_number);
 
     let x: i8 = 5;
     let y: Option<i8> = Some(5);
 
     // let sum = x + y; // no se puede porq son distintos tipos
     let sum = x + y.unwrap_or(0);
-    println!("La suma es: {sum}");
+    info!("La suma es: {sum}");
 
-    value_in_cent(Coin::Quarter((Comunidades::Castilla)));
+    value_in_cent(Coin::Quarter(Comunidades::Castilla));
 
     // if let
     let some_3 = Some(3);
     if let Some(3) = some_3 {
-        println!("Tres!");
+        info!("Tres!");
     }
 }
 
@@ -86,11 +104,11 @@ fn value_in_cent(coin: Coin) -> i8 {
         Coin::Nickel => 5,
         Coin::Dime => 10,
         Coin::Quarter(Comunidades::Castilla) => {
-            println!("Vamos Castilla");
+            info!("Vamos Castilla");
             25
         }
         Coin::Quarter(com) => {
-            println!("Comunidad de {:?}", com);
+            info!("Comunidad de {:?}", com);
             25
         }
     }

@@ -9,6 +9,8 @@ authors = ["david"]
 [dependencies]
 rand = "0.8.5"
 colored="2.0.0"
+log = "0.4.16"
+env_logger ="0.10.0"
 
 # cargo run --bin cap01
 [[bin]]
