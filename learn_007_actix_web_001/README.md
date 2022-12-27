@@ -1,6 +1,6 @@
 # Actix
 
-Creditos a https://www.youtube.com/playlist?list=PLTeVz4vFc2T40rXK79TLzM5-bghdK41EC 
+Creditos a https://www.youtube.com/playlist?list=PLTeVz4vFc2T40rXK79TLzM5-bghdK41EC gracias a @everitosan
 
 ```
 sudo apt install net-tools
