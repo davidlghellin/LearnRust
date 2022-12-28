@@ -1,31 +1,32 @@
 use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
-#[derive(Debug, Clone, Serialize, Deserialize)]
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct User {
-    pub id: Uuid,
+    pub id: uuid::Uuid,
     pub name: String,
-    pub fecha_nacimiento: NaiveDate,
+    pub birth_date: NaiveDate,
     pub custom_data: CustomData,
-    pub creado_el: Option<DateTime<Utc>>,
-    pub actualizado_el: Option<DateTime<Utc>>,
+    pub created_at: Option<DateTime<Utc>>,
+    pub updated_at: Option<DateTime<Utc>>,
 }
 
 impl User {
-    pub fn new(name: String, birth_date_ymd: (i32, u32, u32)) -> User {
+    pub fn new(name: String, birth_date_ymd: (i32, u32, u32)) -> Self {
         let (year, month, day) = birth_date_ymd;
-        let ui = uuid::Uuid::parse_str("af08097e-e5b2-4ee6-a5b3-d6a0aaa72140").unwrap();
+        let id = uuid::Uuid::parse_str("af08097e-e5b2-4ee6-a5b3-d6a0aaa72140").unwrap();
         Self {
-            id: ui, //uuid::Uuid::new_v4(),
+            id,
             name,
-            fecha_nacimiento: NaiveDate::from_ymd_opt(year, month, day).unwrap(),
-            custom_data: CustomData { random: 12 },
-            creado_el: Some(Utc::now()),
-            actualizado_el: None,
+            birth_date: NaiveDate::from_ymd_opt(year, month, day).unwrap(),
+            custom_data: CustomData { random: 1 },
+            created_at: Some(Utc::now()),
+            updated_at: None,
         }
     }
 }
-#[derive(Debug, Clone, Serialize, Deserialize)]
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct CustomData {
     pub random: u32,
 }

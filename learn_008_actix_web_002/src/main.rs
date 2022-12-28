@@ -12,6 +12,11 @@ use log::info;
 use repository::MemoryRepository;
 use repository::Repository;
 
+async fn greet(req: HttpRequest) -> impl Responder {
+    let name = req.match_info().get("name").unwrap_or("Mundo");
+    format!("Hola {}!\n", &name)
+}
+
 async fn healt(_req: HttpRequest) -> impl Responder {
     "Hello world!"
         .customize()
@@ -19,12 +24,9 @@ async fn healt(_req: HttpRequest) -> impl Responder {
         .insert_header(("x-hello", "world"))
 }
 
-async fn get_user(
-    user_id: web::Path<String>,
-    memorepo: web::Data<Arc<MemoryRepository>>,
-) -> HttpResponse {
+async fn get_user(user_id: web::Path<String>) -> HttpResponse {
     if let Ok(parse_user_id) = uuid::Uuid::parse_str(&user_id) {
-        // let memorepo = MemoryRepository::default();
+        let memorepo = MemoryRepository::default();
         match memorepo.get_user(&parse_user_id) {
             Ok(user) => HttpResponse::Ok().json(user),
             Err(_) => HttpResponse::NotFound().body("Not found"),
@@ -36,23 +38,21 @@ async fn get_user(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // init env vars
     dotenv::dotenv().ok();
+    // building address
     let puerto: u16 = std::env::var("PORT")
         .expect("Puerto no definido")
         .parse()
         .expect("No puedo convertir, puerto mal definido");
     let host = std::env::var("HOST").expect("Puerto no definido");
-
+    let address = format!("{}:{}", host, puerto);
     // Añadimos los logs
     std::env::set_var("RUST_LOG", "info");
     env_logger::init();
     info!("Activamos logs");
 
-    let memorepo = Arc::new(MemoryRepository::default());
-
     let thread_counter: Arc<AtomicU16> = Arc::new(AtomicU16::new(1));
-    // .route("/health", web::get().to(move ||{HttpResponse::Ok()))})
-    // .route("/health", web::get().to(move || HttpResponse::Ok().insert_header(Header("name", index_thread.to_string())).finish()))
     HttpServer::new(move || {
         // en esta clojure compartirá todo lo que le pongamos
         info!(
@@ -62,12 +62,20 @@ async fn main() -> std::io::Result<()> {
         //let index_thread = thread_counter.load(std::sync::atomic::Ordering::SeqCst);
         App::new()
             .wrap(Logger::default()) // añadir los logs
-            .app_data(memorepo.clone())
             .service(web::resource("/user/{user_id}").route(web::get().to(get_user)))
-            .route("/healthok", web::get().to(HttpResponse::Ok))
-            .route("/health", web::get().to(healt))
+            .route("/", web::get().to(greet))
+            .route("/health", web::get().to(HttpResponse::Ok))
+            .route("/health2", web::get().to(healt))
+            .route("/str", web::get().to(|| async { "Hola Rust {}" }))
+            .route("/{name}", web::get().to(greet))
     })
-    .bind((host, puerto))?
+    .bind(&address)
+    .unwrap_or_else(|err| {
+        panic!(
+            "🔥🔥🔥 Couldn't start the server in port {}: {:?}",
+            puerto, err
+        )
+    })
     .run()
     .await
 }
