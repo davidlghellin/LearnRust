@@ -1,6 +1,7 @@
 mod repository;
 mod user;
 mod health;
+mod v1;
 
 use std::sync::atomic::AtomicU16;
 use std::sync::Arc;
@@ -11,7 +12,6 @@ use actix_web::{web, App, HttpRequest, HttpResponse, HttpServer, Responder};
 use actix_web::middleware::Logger;
 use log::info;
 use repository::MemoryRepository;
-use uuid::Uuid;
 
 use crate::repository::RepositoryInjector;
 
@@ -25,17 +25,6 @@ async fn healt(_req: HttpRequest) -> impl Responder {
         .customize()
         .with_status(StatusCode::OK)
         .insert_header(("x-hello", "world"))
-}
-
-async fn get_user(user_id: web::Path<String>, repo: web::Data<RepositoryInjector>) -> HttpResponse {
-    if let Ok(parsed_user_id) = Uuid::parse_str(&user_id) {
-        match repo.get_user(&parsed_user_id) {
-            Ok(user) => HttpResponse::Ok().json(user),
-            Err(_) => HttpResponse::NotFound().body("Not found"),
-        }
-    } else {
-        HttpResponse::BadRequest().body("Invalid UUID")
-    }
 }
 
 #[actix_web::main]
@@ -67,7 +56,8 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default()) // añadir los logs
             .app_data(repo.clone())
             .app_data(thread_index)
-            .service(web::resource("/user/{user_id}").route(web::get().to(get_user)))
+            .configure(v1::service)
+            .configure(v1::config)
             .route("/health", web::get().to(HttpResponse::Ok))
             .route("/health2", web::get().to(healt))
             .route("/str", web::get().to(|| async { "Hola Rust {}" }))
