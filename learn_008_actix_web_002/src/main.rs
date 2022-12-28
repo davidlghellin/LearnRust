@@ -1,5 +1,6 @@
 mod repository;
 mod user;
+mod health;
 
 use std::sync::atomic::AtomicU16;
 use std::sync::Arc;
@@ -16,7 +17,7 @@ use crate::repository::RepositoryInjector;
 
 async fn greet(req: HttpRequest) -> impl Responder {
     let name = req.match_info().get("name").unwrap_or("Mundo");
-    format!("Hola {}!\n", &name)
+    format!("Hola {}! by default\n", &name)
 }
 
 async fn healt(_req: HttpRequest) -> impl Responder {
@@ -70,6 +71,8 @@ async fn main() -> std::io::Result<()> {
             .route("/health", web::get().to(HttpResponse::Ok))
             .route("/health2", web::get().to(healt))
             .route("/str", web::get().to(|| async { "Hola Rust {}" }))
+            .configure(health::config)
+            // por defecto
             .route("/{name}", web::get().to(greet))
     })
     .bind(&address)
