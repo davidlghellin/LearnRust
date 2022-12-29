@@ -13,8 +13,6 @@ use actix_web::middleware::Logger;
 use log::info;
 use repository::MemoryRepository;
 
-use crate::repository::RepositoryInjector;
-
 async fn greet(req: HttpRequest) -> impl Responder {
     let name = req.match_info().get("name").unwrap_or("Mundo");
     format!("Hola {}! by default\n", &name)
@@ -44,7 +42,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
     info!("Activamos logs");
 
-    let repo = RepositoryInjector::new(MemoryRepository::default());
+    let repo = web::Data::new(MemoryRepository::default());
     //let repo = web::Data::new(repo);
 
     let thread_counter: Arc<AtomicU16> = Arc::new(AtomicU16::new(1));
@@ -56,8 +54,8 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default()) // añadir los logs
             .app_data(repo.clone())
             .app_data(thread_index)
-            .configure(v1::service)
-            .configure(v1::config)
+            .configure(v1::service::<MemoryRepository>)
+            .configure(v1::config::<MemoryRepository>)
             .route("/health", web::get().to(HttpResponse::Ok))
             .route("/health2", web::get().to(healt))
             .route("/str", web::get().to(|| async { "Hola Rust {}" }))

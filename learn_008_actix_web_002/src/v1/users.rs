@@ -5,12 +5,12 @@ use actix_web::{
 };
 use uuid::Uuid;
 
-use crate::repository::RepositoryInjector;
+use crate::repository::{Repository};
 // .service(web::resource("/user/{user_id}").route(web::get().to(get_user)))
 
 const PATH: &str = "/user";
 
-pub fn service(cfg: &mut web::ServiceConfig) {
+pub fn service<R: Repository>(cfg: &mut web::ServiceConfig) {
     //cfg.service(version);
     cfg.service(
         web::scope(PATH)
@@ -28,14 +28,11 @@ pub fn service(cfg: &mut web::ServiceConfig) {
             // PUT
             // POST
             // ....
-            .route("{user_id}", web::get().to(get)),
+            .route("{user_id}", web::get().to(get::<R>)),
     );
 }
 
-pub async fn get(
-    user_id: web::Path<Uuid>,
-    repo: RepositoryInjector,
-) -> HttpResponse {
+pub async fn get<R: Repository>(user_id: web::Path<Uuid>, repo: web::Data<R>) -> HttpResponse {
     match repo.get_user(&user_id) {
         Ok(user) => HttpResponse::Ok().json(user),
         Err(_) => HttpResponse::NotFound().body("Not found"),
