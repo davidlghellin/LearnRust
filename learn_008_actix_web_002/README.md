@@ -23,3 +23,8 @@ http get 127.0.0.1:8080/user/af08097e-e5b2-4ee6-a5b3-d6a0aaa72141
 curl -i  127.0.0.1:8080/user/af08097e-e5b2-4ee6-a5b3-d6a0aaa721
 http get 127.0.0.1:8080/user/af08097e-e5b2-4ee6-a5b3-d6a0aaa721
 ```
+
+hemos añadido el `cargo-watch` para actualizar las compilaciones con
+```
+cargo watch -x run
+```

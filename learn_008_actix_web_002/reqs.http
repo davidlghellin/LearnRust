@@ -1,0 +1,8 @@
+### healt
+GET http://127.0.0.1:8080/healt HTTP/1.1
+
+### get user
+GET http://127.0.0.1:8080/v1/user/af08097e-e5b2-4ee6-a5b3-d6a0aaa72140 HTTP/1.1
+
+### get bad user
+GET http://127.0.0.1:8080/v1/user/af08097e-e5b2-4ee6-a5b3 HTTP/1.1

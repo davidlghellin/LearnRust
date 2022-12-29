@@ -14,6 +14,7 @@
 		,"usernamehw.errorlens"
 		//,"vscode-icons-team.vscode-icons"
 		,"PKief.material-icon-theme"
+		,"humao.rest-client"
 	]
 
 
@@ -25,7 +26,8 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "rustc --version",
-
+	,"postCreateCommand": "cargo install cargo-watch"
+	
 	// Configure tool-specific properties.
 	// "customizations": {},
 

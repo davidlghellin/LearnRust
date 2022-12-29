@@ -45,7 +45,7 @@ async fn main() -> std::io::Result<()> {
     info!("Activamos logs");
 
     let repo = RepositoryInjector::new(MemoryRepository::default());
-    let repo = web::Data::new(repo);
+    //let repo = web::Data::new(repo);
 
     let thread_counter: Arc<AtomicU16> = Arc::new(AtomicU16::new(1));
     HttpServer::new(move || {

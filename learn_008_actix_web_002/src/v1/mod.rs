@@ -25,5 +25,5 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(service2);
 
     // este es el get como en v1 pasando todo
-    cfg.service(web::scope("/user2").route("{user_id}", web::get().to(users::get_user)));
+    cfg.service(web::scope("/user2").route("{user_id}", web::get().to(users::get)));
 }
