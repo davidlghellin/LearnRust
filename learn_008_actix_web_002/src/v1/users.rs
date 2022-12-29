@@ -5,7 +5,7 @@ use actix_web::{
 };
 use uuid::Uuid;
 
-use crate::repository::Repository;
+use crate::{repository::Repository, user::User};
 // .service(web::resource("/user/{user_id}").route(web::get().to(get_user)))
 
 const PATH: &str = "/user";
@@ -25,10 +25,13 @@ pub fn service<R: Repository>(cfg: &mut web::ServiceConfig) {
                 path_config_handler,
             ))
             // GET
-            // PUT
+            .route("/{user_id}", web::get().to(get::<R>))
             // POST
-            // ....
-            .route("{user_id}", web::get().to(get::<R>)),
+            .route("/", web::post().to(post::<R>))
+            // PUT
+            .route("/", web::put().to(put::<R>))
+            // DELETE
+            .route("/{user_id}", web::delete().to(delete::<R>)),
     );
 }
 
@@ -36,6 +39,27 @@ pub async fn get<R: Repository>(user_id: web::Path<Uuid>, repo: web::Data<R>) ->
     match repo.get_user(&user_id) {
         Ok(user) => HttpResponse::Ok().json(user),
         Err(_) => HttpResponse::NotFound().body("Not found"),
+    }
+}
+
+pub async fn post<R: Repository>(user: web::Json<User>, repo: web::Data<R>) -> HttpResponse {
+    match repo.create_user(&user) {
+        Ok(user) => HttpResponse::Created().json(user),
+        Err(_) => HttpResponse::InternalServerError().body("Not found"),
+    }
+}
+
+pub async fn put<R: Repository>(user: web::Json<User>, repo: web::Data<R>) -> HttpResponse {
+    match repo.update_user(&user) {
+        Ok(user) => HttpResponse::Ok().json(user),
+        Err(_) => HttpResponse::InternalServerError().body("Not found"),
+    }
+}
+
+pub async fn delete<R: Repository>(user_id: web::Path<Uuid>, repo: web::Data<R>) -> HttpResponse {
+    match repo.delete_user(&user_id) {
+        Ok(user) => HttpResponse::Ok().json(user),
+        Err(_) => HttpResponse::InternalServerError().body("Algo ha pasado"),
     }
 }
 
@@ -69,6 +93,9 @@ mod tests {
         CustomRepo{}
         impl Repository for CustomRepo{
             fn get_user(&self, user_id:&uuid::Uuid) -> Result<User,String>;
+            fn create_user(&self, user: &User) -> Result<User, String>;
+            fn update_user(&self, user_id: &User) -> Result<User, String>;
+            fn delete_user(&self, user_id: &uuid::Uuid) -> Result<Uuid, String> ;
         }
     }
 
