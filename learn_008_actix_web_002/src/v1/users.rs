@@ -82,6 +82,8 @@ mod tests {
     // use mockall::predicate::*;
     // use mockall::*;
 
+    use crate::repository::RepositoryError;
+
     #[test]
     fn mytest() {
         let mut mock = MockMyTrait::new();
@@ -92,10 +94,10 @@ mod tests {
     mock! {
         CustomRepo{}
         impl Repository for CustomRepo{
-            fn get_user(&self, user_id:&uuid::Uuid) -> Result<User,String>;
-            fn create_user(&self, user: &User) -> Result<User, String>;
-            fn update_user(&self, user_id: &User) -> Result<User, String>;
-            fn delete_user(&self, user_id: &uuid::Uuid) -> Result<Uuid, String> ;
+            fn get_user(&self, user_id:&uuid::Uuid) -> Result<User, RepositoryError>;
+            fn create_user(&self, user: &User) -> Result<User, RepositoryError>;
+            fn update_user(&self, user_id: &User) -> Result<User, RepositoryError>;
+            fn delete_user(&self, user_id: &uuid::Uuid) -> Result<Uuid, RepositoryError> ;
         }
     }
 
