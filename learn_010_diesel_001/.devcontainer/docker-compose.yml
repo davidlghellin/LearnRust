@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    volumes:
+      - mysql_volume:/var/lib/mysql
+      # https://onexlab-io.medium.com/docker-compose-mysql-multiple-database-fe640938e06b
+      - ../init:/docker-entrypoint-initdb.d
+    environment:
+      TZ: "España/Madrid"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+      MYSQL_ROOT_PASSWORD: "webinar-root-pass"
+      MYSQL_USER: 'gestor'
+      MYSQL_PASSWORD: 'secreto'
+      MYSQL_DATABASE: 'proyecto'
+    ports:
+      -  3307:3306
+      -  33061:33060
+    networks:
+      - default
+    env_file:
+      # Ensure that the variables in .env match the same variables in devcontainer.json
+      - ../.env
+    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+        # Ensure that the variables in .env match the same variables in devcontainer.json
+        - ../.env
+
+    volumes:
+      - ../..:/workspaces:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    network_mode: service:db
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+volumes:
+    mysql_volume:
