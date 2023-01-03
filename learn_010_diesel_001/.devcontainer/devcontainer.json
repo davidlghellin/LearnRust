@@ -14,7 +14,7 @@
 	// "forwardPorts": [5432],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "rustc --version",
+	,"postCreateCommand": "cargo install diesel_cli"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
