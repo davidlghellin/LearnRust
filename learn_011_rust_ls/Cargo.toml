@@ -1,0 +1,12 @@
+[package]
+name = "learn_011_rust_ls"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.22"
+clap = { version = "4.0.32", features = ["derive"] }
+libc = "0.2"
+users = "0.11.0"
