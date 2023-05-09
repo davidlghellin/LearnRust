@@ -6,7 +6,7 @@ fn main() {
         "bar" => &[None, Some("bak"), Some("baz")],
     )
     .unwrap();
-    
+
     let mut file = std::fs::File::create("path.csv").unwrap();
     CsvWriter::new(&mut file).finish(&mut df).unwrap();
 }
