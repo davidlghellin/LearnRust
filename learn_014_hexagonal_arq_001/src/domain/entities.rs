@@ -53,6 +53,7 @@ impl TryFrom<Vec<String>> for PokemonTypes {
                 }
             }
             Ok(Self(pts))
+            
         }
     }
 }
