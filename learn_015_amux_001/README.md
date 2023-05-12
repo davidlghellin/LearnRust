@@ -12,7 +12,6 @@ http get 127.0.0.1:8080/hello name=david
 
 curl  -i 'http://localhost:8080/hello?name=david'
 http get "127.0.0.1:8080/hello?name=david"
+
+http get 127.0.0.1:8080/hello2/david
 ```
-
-
-cargo watch -q -c -w src/ -x run
