@@ -9,11 +9,12 @@ mod web;
 
 use axum::{
     extract::{Path, Query},
-    response::{Html, IntoResponse},
+    response::{Html, IntoResponse, Response},
     routing::{get, get_service},
-    Router,
+    Router, middleware,
 };
 use serde::Deserialize;
+use tower_cookies::CookieManagerLayer;
 use tower_http::services::ServeDir;
 
 #[tokio::main]
@@ -21,6 +22,8 @@ async fn main() {
     let routes_all = Router::new()
         .merge(routes_hello())
         .merge(web::routes_login::routes())
+        .layer(middleware::map_response(main_response_mapper))
+        .layer(CookieManagerLayer::new())
         .fallback_service(routes_static());
 
     // region --start server
@@ -31,6 +34,13 @@ async fn main() {
         .await
         .unwrap();
     // endregion --start server
+}
+
+async fn main_response_mapper(res: Response) -> Response {
+    println!("->> {:12} - main_response_mapper", "RES_MAPPER");
+
+    println!();
+    res 
 }
 
 fn routes_static() -> Router {
