@@ -1,27 +1,35 @@
 #![allow(unused)]
 
+use crate::model::ModelController;
+
 pub use self::error::{Error, Result};
 
 use std::net::SocketAddr;
 
 mod error;
+mod model;
 mod web;
 
 use axum::{
     extract::{Path, Query},
+    middleware,
     response::{Html, IntoResponse, Response},
     routing::{get, get_service},
-    Router, middleware,
+    Router,
 };
 use serde::Deserialize;
 use tower_cookies::CookieManagerLayer;
 use tower_http::services::ServeDir;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<()> {
+    // Inicilizar el model controller
+    let mc = ModelController::new().await?;
+
     let routes_all = Router::new()
         .merge(routes_hello())
         .merge(web::routes_login::routes())
+        .nest("/api", web::routes_tickets::routes(mc.clone()))
         .layer(middleware::map_response(main_response_mapper))
         .layer(CookieManagerLayer::new())
         .fallback_service(routes_static());
@@ -34,13 +42,15 @@ async fn main() {
         .await
         .unwrap();
     // endregion --start server
+
+    Ok(())
 }
 
 async fn main_response_mapper(res: Response) -> Response {
     println!("->> {:12} - main_response_mapper", "RES_MAPPER");
 
     println!();
-    res 
+    res
 }
 
 fn routes_static() -> Router {

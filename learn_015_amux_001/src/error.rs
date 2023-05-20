@@ -5,6 +5,9 @@ pub type Result<T> = core::result::Result<T, Error>;
 #[derive(Debug)]
 pub enum Error {
     LoginFail,
+
+    // -- Model errors.
+    TicketDeleteFailIdNotFound { id: u64 },
 }
 
 // region:    --- Error Boilerplate
@@ -17,15 +20,15 @@ impl std::error::Error for Error {}
 // endregion: --- Error Boilerplate
 
 impl IntoResponse for Error {
-	fn into_response(self) -> Response {
-		println!("->> {:<12} - {self:?}", "INTO_RES");
+    fn into_response(self) -> Response {
+        println!("->> {:<12} - {self:?}", "INTO_RES");
 
-		// Create a placeholder Axum reponse.
-		let mut response = StatusCode::INTERNAL_SERVER_ERROR.into_response();
+        // Create a placeholder Axum reponse.
+        let mut response = StatusCode::INTERNAL_SERVER_ERROR.into_response();
 
-		// Insert the Error into the reponse.
-		response.extensions_mut().insert(self);
+        // Insert the Error into the reponse.
+        response.extensions_mut().insert(self);
 
-		response
-	}
+        response
+    }
 }
