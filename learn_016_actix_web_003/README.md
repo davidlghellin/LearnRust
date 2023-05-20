@@ -12,6 +12,7 @@ export DOCKER_BUILDKIT=1
 docker build -t  todo-app .
 
 docker run --network host -p 8080:8080 -it todo-app
+docker run --network host -p 8080:8080 -e PORT=8080 -e HOST="127.0.0.1" -it todo-app
 ```
 
 ```shell
