@@ -13,3 +13,8 @@ docker build -t  todo-app .
 
 docker run --network host -p 8080:8080 -it todo-app
 ```
+
+```shell
+http get 127.0.0.1:8080 
+curl -i  http://127.0.0.1:8080
+```
