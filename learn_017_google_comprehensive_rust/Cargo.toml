@@ -19,3 +19,7 @@ path = "src/day01/ejer_m/main.rs"
 [[bin]]
 name = "day01t"
 path = "src/day01t/main.rs"
+
+[[bin]]
+name = "ejer01t"
+path = "src/day01t/ejer_t/main.rs"
