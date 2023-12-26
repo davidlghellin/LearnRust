@@ -1,0 +1,23 @@
+[package]
+name = "ficheros"
+version = "0.1.0"
+edition = "2021"
+
+# https://rustyfullstack.com/blog/manejo-de-archivos-de-texto-con-rust
+
+[dependencies]
+
+# cargo run --bin creacion_ficheros
+[[bin]]
+name = "creacion_ficheros"
+path = "src/creacion_ficheros/creacion_archivo.rs"
+
+# cargo run --bin creacion_ficheros
+[[bin]]
+name = "escribir_archivo"
+path = "src/creacion_ficheros/escribir_archivo.rs"
+
+# cargo run --bin modo_append
+[[bin]]
+name = "modo_append"
+path = "src/creacion_ficheros/modo_append.rs"
