@@ -15,7 +15,8 @@ cargo watch -x run
 ```
 
 ```shell
-http get 127.0.0.1:8080/pizzas
-http post 127.0.0.1:8080/comprarpizza pizza_name=
-http post 127.0.0.1:8080/comprarpizza pizza_name="la ultima"
+http get   127.0.0.1:8080/pizzas
+http post  127.0.0.1:8080/comprarpizza pizza_name=
+http post  127.0.0.1:8080/comprarpizza pizza_name="la ultima"
+http patch 127.0.0.1:8080/actualizarpizza/12345
 ```

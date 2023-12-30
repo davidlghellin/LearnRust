@@ -1,8 +1,7 @@
-use actix_web::{get, patch, post, App, HttpResponse, HttpServer, Responder, web::Json};
+use actix_web::{get, patch, post, web::Json, web::Path, App, HttpResponse, HttpServer, Responder};
 mod models;
+use crate::models::pizza::{BuyPizzaRequest, UpdatePizzaURL};
 use validator::Validate;
-use crate::models::pizza::BuyPizzaRequest;
-
 
 #[get("/pizzas")]
 async fn get_pizzas() -> impl Responder {
@@ -11,22 +10,20 @@ async fn get_pizzas() -> impl Responder {
 
 #[post("/comprarpizza")]
 async fn comprar_pizza(body: Json<BuyPizzaRequest>) -> impl Responder {
-    
     let is_valid = body.validate();
     match is_valid {
-        Ok(_)=>{
+        Ok(_) => {
             let pizza_name = body.pizza_name.clone();
             HttpResponse::Ok().body(format!("Comprando la pizza {pizza_name}"))
-        },
-        Err(_) => HttpResponse::Ok().body("El nombre de la pizza es requerido")
+        }
+        Err(_) => HttpResponse::Ok().body("El nombre de la pizza es requerido"),
     }
-
-
 }
 
 #[patch("/actualizarpizza/{uuid}")]
-async fn actualizar_pizza() -> impl Responder {
-    HttpResponse::Ok().body("Actualizando una pizza")
+async fn actualizar_pizza(update_pizza_url: Path<UpdatePizzaURL>) -> impl Responder {
+    let uuid = update_pizza_url.into_inner().uuid;
+    HttpResponse::Ok().body(format!("Actualizando la pizza con uuid {uuid}"))
 }
 
 #[actix_web::main]
