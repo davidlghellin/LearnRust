@@ -19,3 +19,9 @@ docker run --network host -p 8080:8080 -e PORT=8080 -e HOST="127.0.0.1" -it todo
 http get 127.0.0.1:8080 
 curl -i  http://127.0.0.1:8080
 ```
+
+Optimizado el docker
+```shell
+docker build -t  my-rust-app-todo -f DockerfileScratch .
+```
+
