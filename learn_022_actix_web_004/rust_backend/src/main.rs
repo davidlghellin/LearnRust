@@ -1,11 +1,19 @@
+use actix_web::web::Data;
 use actix_web::{get, patch, post, web::Json, web::Path, App, HttpResponse, HttpServer, Responder};
+mod db;
 mod models;
+use crate::db::Database;
 use crate::models::pizza::{BuyPizzaRequest, UpdatePizzaURL};
 use validator::Validate;
 
 #[get("/pizzas")]
-async fn get_pizzas() -> impl Responder {
-    HttpResponse::Ok().body("Pizzas disponibles")
+async fn get_pizzas(db: Data<Database>) -> impl Responder {
+    //HttpResponse::Ok().body("Pizzas disponibles")
+    let pizzas = db.get_all_pizzas().await;
+    match pizzas {
+        Some(pizzas_encontradas) => HttpResponse::Ok().body(format!("{:?}",pizzas_encontradas)),
+        None =>HttpResponse::Ok().body("eRRPOR"),
+    }
 }
 
 #[post("/comprarpizza")]
@@ -28,8 +36,12 @@ async fn actualizar_pizza(update_pizza_url: Path<UpdatePizzaURL>) -> impl Respon
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    let db = Database::init().await.expect("error conectando a la bbdd");
+    let db_data = Data::new(db);
+
+    HttpServer::new(move || {
         App::new()
+            .app_data(db_data.clone())
             .service(get_pizzas)
             .service(comprar_pizza)
             .service(actualizar_pizza)
