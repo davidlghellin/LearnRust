@@ -14,3 +14,5 @@ vite.svg
 
 package-lock.json
 main
+
+.env
