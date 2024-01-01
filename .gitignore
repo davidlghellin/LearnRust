@@ -16,3 +16,6 @@ package-lock.json
 main
 
 .env
+
+# fichero log 
+learn_019_read_csv/log/log.log
