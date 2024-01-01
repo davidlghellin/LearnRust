@@ -1,7 +1,7 @@
 use csv;
+use serde::Deserialize;
 use std::{error::Error, io};
 
-use serde::Deserialize;
 /*
 https://crates.io/crates/csv
 https://docs.rs/csv/latest/csv/
@@ -27,8 +27,7 @@ fn read_from_file(path: &str) -> Result<(), Box<dyn Error>> {
 
 fn read_name(path: &str) -> Result<(), Box<dyn Error>> {
     let mut reader = csv::Reader::from_path(path)?;
-    //let mut reader = csv::Reader::from_reader(io::stdin()); // cargo run < ../nombres.csv
-    
+    // let mut reader = csv::Reader::from_reader(io::stdin()); // cargo run < ../nombres.csv
     for result in reader.deserialize() {
         // Notice that we need to provide a type hint for automatic
         // deserialization.
@@ -40,7 +39,7 @@ fn read_name(path: &str) -> Result<(), Box<dyn Error>> {
 
 fn main() {
     // if let Err(e) = read_from_file("../customers.csv") {
-    if let Err(e) = read_name("../nombres.csv") {
+    if let Err(e) = read_name("../input/nombres.csv") {
         eprintln!("{}", e); // https://doc.rust-lang.org/std/macro.eprintln.html
     }
 }
