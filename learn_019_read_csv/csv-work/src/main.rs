@@ -26,8 +26,8 @@ fn read_from_file(path: &str) -> Result<(), Box<dyn Error>> {
 }
 
 fn read_name(path: &str) -> Result<(), Box<dyn Error>> {
-    // let mut reader = csv::Reader::from_path(path)?;
-    let mut reader = csv::Reader::from_reader(io::stdin()); // cargo run < ../nombres.csv
+    let mut reader = csv::Reader::from_path(path)?;
+    //let mut reader = csv::Reader::from_reader(io::stdin()); // cargo run < ../nombres.csv
     
     for result in reader.deserialize() {
         // Notice that we need to provide a type hint for automatic
