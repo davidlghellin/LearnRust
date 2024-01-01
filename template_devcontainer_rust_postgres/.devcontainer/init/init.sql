@@ -1,5 +1,7 @@
-CREATE DATABASE IF NOT exists `db_desde_sql`;
-CREATE DATABASE IF NOT exists `db_desde_sql2`;
+-- Sino carga reviar permisos, parece que no carga
+create database mydb;
+create user david with encrypted password 'david';
+grant all privileges on database mydb to david;
 
-CREATE USER david @'localhost' identified by "secreto";
-GRANT ALL ON `proyecto`.* to `david`@`%`;
+CREATE TABLE postgres.public.user(nombre VARCHAR(32), apellido VARCHAR(32), id VARCHAR(64));
+INSERT INTO  postgres.public.user(nombre, apellido, id) VALUES('David', 'Lopez', '1');
