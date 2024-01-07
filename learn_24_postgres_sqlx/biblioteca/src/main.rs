@@ -1,4 +1,5 @@
 use sqlx::pool;
+use sqlx::postgres::any::AnyConnectionBackend;
 use sqlx::prelude::FromRow;
 use sqlx::Connection;
 use sqlx::PgPool;
@@ -126,4 +127,31 @@ async fn read_all_from_row(conn: &PgPool) -> Result<Vec<Book>, Box<dyn Error>> {
 
     let books: Vec<Book> = query.fetch_all(conn).await?;
     Ok(books)
+}
+
+async fn insert_book(book: Book, conn: &sqlx::PgPool) -> Result<(), Box<dyn Error>> {
+    //transacción
+    let mut txn = conn.begin().await?;
+
+    let autor_q: &str = r"
+        INSERT INTO author(name) VALUES ($1) RETURNING id
+    ";
+    let book_q: &str = r"
+        INSERT INTO book(title, author, isbn) 
+        VALUES ($1, $2, $3)
+    ";
+    let autor_id = sqlx::query_as(autor_q)
+        .bind(&book.author)
+        .fetch_one(&mut *txn)
+        .await?;
+
+    sqlx::query(book_q)
+    .bind(&book.title)
+    .bind(&book.author)
+    .bind(&book.isbn)
+    .execute(&mut *txn)
+    .await?;
+
+    txn.commit().await?;
+    Ok(())
 }
