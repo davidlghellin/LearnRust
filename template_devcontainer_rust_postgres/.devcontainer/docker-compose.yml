@@ -12,9 +12,6 @@ services:
         # Use the VARIANT arg to pick a Debian OS version: buster, bullseye
         # Use bullseye when on local on arm64/Apple Silicon.
         VARIANT:  bullseye
-    env_file:
-        # Ensure that the variables in .env match the same variables in devcontainer.json
-        - .env
     # Security Opt and cap_add for C++ based debuggers to work.
     # See `runArgs`: https://github.com/Microsoft/vscode-docs/blob/main/docs/remote/devcontainerjson-reference.md
     # security_opt:
@@ -29,7 +26,9 @@ services:
     command: sleep infinity
 
     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-    network_mode: service:db
+
+    networks:
+      - default
 
     # Uncomment the next line to use a non-root user for all processes.
     # user: vscode
@@ -40,11 +39,14 @@ services:
   db:
     image: postgres:14.1
     #restart: unless-stopped
+    environment:
+      POSTGRES_USER:     'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB:       'postgres'
+    #  POSTGRES_HOSTNAME: 'localhost'
+    ports:
+    -  5432:5432
     volumes:
       - ./init/init.sql:/docker-entrypoint-initdb.d/init.sql
-    env_file:
-        # Ensure that the variables in .env match the same variables in devcontainer.json
-        - .env
-
-    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    networks:
+      - default
