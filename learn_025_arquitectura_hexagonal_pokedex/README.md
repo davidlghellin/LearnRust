@@ -25,3 +25,12 @@ touch domain/src/ports/output/mod.rs
 
 cargo new --vcs=none pokedex
  ```
+
+ ```sh
+cargo new --vcs=none --lib application
+
+mkdir -p application/src/services
+touch application/src/services/mod.rs
+mkdir -p application/src/usecase
+touch application/src/usecase/mod.rs
+ ```

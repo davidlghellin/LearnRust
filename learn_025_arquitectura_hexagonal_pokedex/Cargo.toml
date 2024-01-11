@@ -1,5 +1,5 @@
 [workspace]
-members = ["domain", "pokedex"]
+members = [ "application","domain", "pokedex"]
 
 [workspace. Dependencies]
 # We will add all our common dependent crates for our sub crates to share
