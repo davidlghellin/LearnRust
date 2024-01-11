@@ -146,12 +146,22 @@ async fn insert_book(book: Book, conn: &sqlx::PgPool) -> Result<(), Box<dyn Erro
         .await?;
 
     sqlx::query(book_q)
-    .bind(&book.title)
-    .bind(&book.author)
-    .bind(&book.isbn)
-    .execute(&mut *txn)
-    .await?;
+        .bind(&book.title)
+        .bind(&book.author)
+        .bind(&book.isbn)
+        .execute(&mut *txn)
+        .await?;
 
     txn.commit().await?;
     Ok(())
+}
+
+async fn insert(book: &Book, pool: &PgPool) {
+    let autor = &book.author;
+    let titulo = &book.title;
+    let isbn = &book.isbn;
+    let q = format!("INSERT INTO book (title, author, isbn) VALUES ({titulo},{autor},{isbn})");
+
+    let result = sqlx::query(&q).execute(pool).await.unwrap();
+    println!("resultado {:?}", &result);
 }
