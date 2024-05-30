@@ -1,5 +1,6 @@
 **/target/
 *.lock
+.idea/
 
 **/node_modules/
 *.log

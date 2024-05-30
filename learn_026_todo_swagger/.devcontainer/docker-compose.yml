@@ -1,0 +1,48 @@
+version: "3.9"
+services:
+  database:
+    image: postgres:latest
+    volumes:
+      #- db-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_PASSWORD=desarrollo
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: psql -U postgres -q -d postgres -c "SELECT 'ready';"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - default
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Use the VARIANT arg to pick a Debian OS version: buster, bullseye
+        # Use bullseye when on local on arm64/Apple Silicon.
+        VARIANT:  bullseye
+    # Security Opt and cap_add for C++ based debuggers to work.
+    # See `runArgs`: https://github.com/Microsoft/vscode-docs/blob/main/docs/remote/devcontainerjson-reference.md
+    # security_opt:
+    #   - seccomp:unconfined
+    # cap_add:
+    #   - SYS_PTRACE
+
+    volumes:
+      - ..:/workspace
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+
+    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+
+    networks:
+      - default
+
+#volumes:
+#  db-data:
