@@ -18,6 +18,11 @@ package-lock.json
 main
 
 .env
+.DS_Store
 
 # fichero log 
 learn_019_read_csv/log/log.log
+
+# profiling
+learn_028_profiling_001/profiling_example/flamegraph.svg
+
