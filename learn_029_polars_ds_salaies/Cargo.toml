@@ -1,0 +1,9 @@
+[package]
+name = "learn_029_polars_ds_salaies"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+polars = { version = "0.44.2", features = ["lazy", "dtype-full"] }
+polars-core = "0.44.2"
+polars-io = "0.44.2"
