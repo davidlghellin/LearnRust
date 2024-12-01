@@ -1,8 +1,17 @@
+#[cfg(feature = "dhat-heap")]
+#[global_allocator]
+static ALLOC: dhat::Alloc = dhat::Alloc;
+
+use std::fs::File;
+
 use polars::prelude::*;
 //use polars::lazy::dsl::*;
 //use polars_core::prelude::*;
 
-fn main() {
+fn main() {    
+    #[cfg(feature = "dhat-heap")]
+let _profiler = dhat::Profiler::new_heap();
+    let guard = pprof::ProfilerGuard::new(100).unwrap();
     escribir_ejemplo_csv();
 
     let s1 = Column::new("Fruit".into(), ["Apple", "Apple", "Pear"]);
@@ -40,6 +49,13 @@ fn main() {
     //println!("{:?}", &lazy_csv.explain(true));
     let final_csv_df = lazy_csv.clone().collect();
     println!("{:?}", final_csv_df);
+
+    if let Ok(report) = guard.report().build() {
+        let file = File::create("flamegraph.svg").unwrap();
+        report.flamegraph(file).unwrap();
+
+        println!("report: {:?}", &report);
+    };
 }
 
 fn example(df: &DataFrame) -> PolarsResult<DataFrame> {

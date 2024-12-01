@@ -20,9 +20,12 @@ main
 .env
 .DS_Store
 
+learn_013_polars_dataframes/path.csv
+
 # fichero log 
 learn_019_read_csv/log/log.log
 
 # profiling
-learn_028_profiling_001/profiling_example/flamegraph.svg
+dhat-heap.json
+flamegraph.svg
 
