@@ -18,6 +18,10 @@ struct SalairesCSV {
 }
 
 fn main() {
+    #[cfg(feature = "dhat-heap")]
+    let _profiler = dhat::Profiler::new_heap();
+    let guard = pprof::ProfilerGuard::new(100).unwrap();
+
     print_csv(csv::Reader::from_path("ds_salaries.csv").unwrap());
 
     let mut rdr = csv::Reader::from_path("ds_salaries.csv").unwrap();
@@ -31,6 +35,13 @@ fn main() {
 
     let arc_salarios: Arc<[SalairesCSV]> = salarios.into();
     println!("{:?}", suma_id_arc(arc_salarios));
+
+    if let Ok(report) = guard.report().build() {
+        let file = File::create("flamegraph_manual.svg").unwrap();
+        report.flamegraph(file).unwrap();
+
+        println!("report: {:?}", &report);
+    };
 }
 
 fn print_csv(mut rdr: Reader<File>) {

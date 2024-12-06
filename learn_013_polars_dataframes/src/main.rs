@@ -10,7 +10,7 @@ use polars::prelude::*;
 
 fn main() {    
     #[cfg(feature = "dhat-heap")]
-let _profiler = dhat::Profiler::new_heap();
+    let _profiler = dhat::Profiler::new_heap();
     let guard = pprof::ProfilerGuard::new(100).unwrap();
     escribir_ejemplo_csv();
 

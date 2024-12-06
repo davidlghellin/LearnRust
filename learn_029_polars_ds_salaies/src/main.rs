@@ -2,6 +2,9 @@ use polars::prelude::*;
 use std::fs::File;
 
 fn main() {
+    #[cfg(feature = "dhat-heap")]
+    let _profiler = dhat::Profiler::new_heap();
+    let guard = pprof::ProfilerGuard::new(100).unwrap();
     // Lee el archivo csv
     let csv: CsvReader<File> = CsvReadOptions::default()
         .with_has_header(true)
@@ -39,4 +42,12 @@ fn main() {
     println!("{:?}", df_group.explain(false));
     println!("{:?}", df_group.explain(true));
     println!("{:?}", df_group.collect());
+
+
+    if let Ok(report) = guard.report().build() {
+        let file = File::create("flamegraph.svg").unwrap();
+        report.flamegraph(file).unwrap();
+
+        println!("report: {:?}", &report);
+    };
 }

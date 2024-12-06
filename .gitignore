@@ -28,4 +28,5 @@ learn_019_read_csv/log/log.log
 # profiling
 dhat-heap.json
 flamegraph.svg
-
+profile.json
+flamegraph_manual.svg

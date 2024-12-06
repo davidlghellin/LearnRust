@@ -10,6 +10,16 @@ polars = { version = "0.44.2", features = ["lazy", "dtype-full"] }
 polars-core = "0.44.2"
 polars-io = "0.44.2"
 
+dhat = "0.3.2"
+pprof = { version = "0.14", features = ["flamegraph"] }
+
+
+[profile.release]
+debug = 1
+
+[features]
+dhat-heap = []
+
 [[bin]]
 name = "main"
 path = "src/main.rs"

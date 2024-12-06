@@ -3,17 +3,22 @@
 {
 	"name": "Rust",
 	"image": "mcr.microsoft.com/devcontainers/rust:1-bullseye",
+	"runArgs": ["--privileged"],
 	"features": {
 		"ghcr.io/devcontainers/features/rust:1": {}
 	},
-	"extensions": [
-		"rust-lang.rust-analyzer"
-		,"swellaby.vscode-rust-test-adapter"
-		,"dtsvet.vscode-wasm"
-		,"oderwat.indent-rainbow"
-		,"usernamehw.errorlens"
-		,"vscode-icons-team.vscode-icons"
-	]
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"rust-lang.rust-analyzer",
+				"swellaby.vscode-rust-test-adapter",
+				"dtsvet.vscode-wasm",
+				"oderwat.indent-rainbow",
+				"usernamehw.errorlens",
+				"vscode-icons-team.vscode-icons"
+			]
+		}
+	}
 
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
@@ -23,7 +28,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "rustc --version",
+	,"postCreateCommand": "cargo install --locked samply"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
