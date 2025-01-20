@@ -34,6 +34,7 @@ fn main() {
     //println!("{:?}", suma_id(salarios));
 
     let arc_salarios: Arc<[SalairesCSV]> = salarios.into();
+    // let arc_salarios2: Arc<[SalairesCSV]> = Arc::from(salarios.into_boxed_slice());
     println!("{:?}", suma_id_arc(arc_salarios));
 
     if let Ok(report) = guard.report().build() {
