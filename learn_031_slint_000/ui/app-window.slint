@@ -1,6 +1,36 @@
+import { Button, LineEdit } from "std-widgets.slint";
+
+component CalcaularBoton {
+    Button {
+        text: "Click Me";
+        primary: true;
+        height: 35px;
+    }
+}
+
 export component MainWindow inherits Window {
-    Text {
-        text: "hello world";
-        color: green;
+    background: #313132;
+    width: 200px;
+    height: 200px;
+    GridLayout {
+        spacing: 5px;
+        Row {    
+            Text {
+                text: "Hello World";
+                horizontal-alignment: center;
+                font-size: 24px;
+                font-weight: 900;
+                color: red;
+            }
+        }
+        Row {
+            LineEdit {
+                font-size: 16px;
+                placeholder-text: "Enter text here";
+            }
+        }
+        Row {
+            CalcaularBoton{}
+        }
     }
 }
