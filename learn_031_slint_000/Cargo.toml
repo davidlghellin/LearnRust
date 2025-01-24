@@ -10,3 +10,11 @@ slint = "1.8.0"
 
 [build-dependencies]
 slint-build = "1.8.0"
+
+# cargo install cargo-bundle
+[package.metadata.bundle]
+name = "Calcula impuestos"
+identifier = "io.github.davidlghellin.devel0pez.calcula_impuestos"
+description = "Calcula impuestos visual"
+# cargo bundle --release
+
