@@ -1,22 +1,32 @@
-import { Button, LineEdit } from "std-widgets.slint";
+import { Button, LineEdit, VerticalBox, HorizontalBox, Slider } from "std-widgets.slint";
 
 component CalcaularBoton {
     Button {
-        text: "Click Me";
+        text: "Adorno";
         primary: true;
         height: 35px;
     }
 }
 
 export component MainWindow inherits Window {
+
+
+    title: "Calculo de impuestos";
+    preferred-width: 600px;
+    preferred-height: 600px;
+
+    in property <string> results : "";
+    callback divide_income(text: string);
+    in-out property <bool> abir_animacion: false;
+
     background: #313132;
-    width: 200px;
-    height: 200px;
+
     GridLayout {
-        spacing: 5px;
+        padding: 50px;
+        spacing: 35px;
         Row {    
             Text {
-                text: "Hello World";
+                text: "Calculo de impuestos";
                 horizontal-alignment: center;
                 font-size: 24px;
                 font-weight: 900;
@@ -24,13 +34,57 @@ export component MainWindow inherits Window {
             }
         }
         Row {
-            LineEdit {
+            income := LineEdit {
                 font-size: 16px;
-                placeholder-text: "Enter text here";
+                placeholder-text: "Ingresa la cantidad";
+                horizontal-alignment: center;
+                height: 35px;
+                text: amplitude-slider.value;
             }
         }
         Row {
-            CalcaularBoton{}
+            HorizontalBox {
+                CalcaularBoton{}
+                Button {
+                    text: "Calcular";
+                    primary: true;
+                    height: 35px;
+                    width: 100px;
+                    clicked => {
+                        root.abir_animacion = !root.abir_animacion;
+                        root.divide_income(income.text)
+                    }
+                }
+            }
+        }
+        Row {
+            VerticalBox {
+                padding: 50px;
+                Rectangle {
+                    height: 200px;
+                    background: root.abir_animacion ? blue : red;
+                    Text {
+                        text: root.results;
+                        horizontal-alignment: center;
+                        font-size: 24px;
+                        font-weight: 900;
+                        color: black;
+                    }
+                }
+                HorizontalBox {
+                    Text {
+                        text: "Amplitude:";
+                        font-weight: 600;
+                        vertical-alignment: center;
+                    }
+            
+                    amplitude-slider := Slider {
+                        minimum: 0;
+                        maximum: 100;
+                        value: 50;
+                    }
+                }
+            }
         }
     }
 }
