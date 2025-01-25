@@ -67,29 +67,33 @@ export component MainWindow inherits Window {
                 Rectangle {
                     height: 200px;
                     background: #3a7aa8;
+                    // en la caja del rectangulo creamos un texto que mostrara el resultado
                     Text {
                         text: root.results;
                         horizontal-alignment: center;
                         font-size: 24px;
                         font-weight: 900;
                         color: black;
-                        
                     }
+                    // Izquierda
+                    // tendremos a la izquierda un rectangulo que se animara
                     Rectangle {
-                        background: #313132;
-                        x:0;  
-                        width:  abir_animacion ?0px : parent.width/2;
-                        height: parent.height;
+                        background: root.background;
+                        x:0;                                          // posicion inicial
+                        width:  abir_animacion ?0px : parent.width/2; // si abir_animacion es verdadero entonces el ancho es 0px, si no es verdadero entonces el ancho es la mitad del ancho del padre
+                        height: parent.height;                        // la altura es la misma que la del padre
                         animate width {
                              duration: 235ms;
                              easing: ease-in;
                         }
                     }
+                    // Derecha
+                    // tendremos a la derecha un rectangulo que se animara
                     Rectangle {
-                        background: #313132;
-                        x: abir_animacion? parent.width : parent.width/2;
-                        width: abir_animacion ? 0px : parent.width/2;
-                        height: parent.height;
+                        background: root.background;
+                        x: abir_animacion? parent.width : parent.width/2; // si abir_animacion es verdadero entonces la posicion en x es el ancho del padre, si no es verdadero entonces la posicion en x es la mitad del ancho del padre
+                        width: abir_animacion ? 0px : parent.width/2;     // si abir_animacion es verdadero entonces el ancho es 0px, si no es verdadero entonces el ancho es la mitad del ancho del padre
+                        height: parent.height;                            // la altura es la misma que la del padre
                         animate width {
                              duration: 235ms;
                              easing: ease-in;
