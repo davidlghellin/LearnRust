@@ -1,11 +1,10 @@
 import { Button, LineEdit, VerticalBox, HorizontalBox, Slider } from "std-widgets.slint";
 
-component CalcaularBoton {
-    Button {
+component CalcaularBoton inherits Button {
         text: "Adorno";
         primary: true;
         height: 35px;
-    }
+        width: 100px;
 }
 
 export component MainWindow inherits Window {
@@ -43,18 +42,23 @@ export component MainWindow inherits Window {
             }
         }
         Row {
-            HorizontalBox {
-                CalcaularBoton{}
-                Button {
-                    text: "Calcular";
-                    primary: true;
-                    height: 35px;
-                    width: 100px;
-                    clicked => {
-                        root.abir_animacion = !root.abir_animacion;
-                        root.divide_income(income.text)
-                    }
+
+            GridLayout {
+                spacing: 5px;
+                Row {
+                    Rectangle { CalcaularBoton {}}
+                    Rectangle { Button {
+                        text: "Calcular";
+                        primary: true;
+                        height: 35px;
+                        width: 100px;
+                        clicked => {
+                            root.abir_animacion = !root.abir_animacion;
+                            root.divide_income(income.text)
+                        }
+                    } }
                 }
+            
             }
         }
         Row {
@@ -62,13 +66,38 @@ export component MainWindow inherits Window {
                 padding: 50px;
                 Rectangle {
                     height: 200px;
-                    background: root.abir_animacion ? blue : red;
+                    background: #3a7aa8;
                     Text {
                         text: root.results;
                         horizontal-alignment: center;
                         font-size: 24px;
                         font-weight: 900;
                         color: black;
+                        
+                    }
+                    Rectangle {
+                        background: #313132;
+                        x:0;  
+                        width:  abir_animacion ?0px : parent.width/2;
+                        height: parent.height;
+                        animate width {
+                             duration: 235ms;
+                             easing: ease-in;
+                        }
+                    }
+                    Rectangle {
+                        background: #313132;
+                        x: abir_animacion? parent.width : parent.width/2;
+                        width: abir_animacion ? 0px : parent.width/2;
+                        height: parent.height;
+                        animate width {
+                             duration: 235ms;
+                             easing: ease-in;
+                        }
+                        animate x {
+                             duration: 235ms;
+                             easing: ease-in;                             
+                        }
                     }
                 }
                 HorizontalBox {
