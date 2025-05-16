@@ -7,9 +7,9 @@ RUN rustup target add x86_64-unknown-linux-musl
 RUN apt update && apt install -y musl-tools musl-dev
 RUN update-ca-certificates
 
-# Create appuser
-ENV USER=csv-work
-ENV UID=10001
+# Define argumentos de usuario y UID dinámico
+ARG USER=csv-work
+ARG UID=10001
 
 RUN adduser \
     --disabled-password \
@@ -20,11 +20,8 @@ RUN adduser \
     --uid "${UID}" \
     "${USER}"
 
-
 WORKDIR /csv-work
-
 COPY ./ .
-
 RUN cargo build --target x86_64-unknown-linux-musl --release
 
 ####################################################################################################
@@ -32,18 +29,20 @@ RUN cargo build --target x86_64-unknown-linux-musl --release
 ####################################################################################################
 FROM scratch
 
-# Import from builder.
+# Importa info de usuarios
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 
 WORKDIR /csv-work
 
-# Copy our build
+# Copia el binario
 COPY --from=builder /csv-work/target/x86_64-unknown-linux-musl/release/csv-work ./
 
-# Use an unprivileged user.
-USER csv-work:csv-work
+# Usa un usuario no privilegiado con UID dinámico
+ARG USER=csv-work
+USER ${USER}:${USER}
 
 VOLUME ["/csv-work"]
 
 CMD ["/csv-work/csv-work"]
+
