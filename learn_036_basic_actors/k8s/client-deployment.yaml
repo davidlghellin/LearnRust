@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: actor-client
+  namespace: actor-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: actor-client
+  template:
+    metadata:
+      labels:
+        app: actor-client
+    spec:
+      containers:
+        - name: actor-client
+          image: actor_client:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SERVER_IP
+              value: "actor-server-service"  # Usando el Service DNS de Kubernetes
+
