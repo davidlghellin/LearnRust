@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: actor-client-job
+  namespace: actor-demo
+spec:
+  ttlSecondsAfterFinished: 10 # 10 segundos hasta borrar
+  template:
+    metadata:
+      labels:
+        app: actor-client
+    spec:
+      containers:
+        - name: actor-client
+          image: actor_client:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: SERVER_IP
+              value: "actor-server-service"
+      restartPolicy: Never
+
