@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "proto_messages",
+    "actor_client",
+    "actor_server"
+]
+

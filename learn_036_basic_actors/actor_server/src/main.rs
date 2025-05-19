@@ -3,6 +3,9 @@ use std::net::{TcpListener, TcpStream};
 use std::sync::{Arc, Mutex};
 use std::thread;
 
+use prost::Message;
+use proto_messages::ActorMessage;
+
 fn handle_client(mut stream: TcpStream, num: Arc<Mutex<i32>>) {
     let mut buffer = [0; 512];
     loop {
@@ -12,18 +15,35 @@ fn handle_client(mut stream: TcpStream, num: Arc<Mutex<i32>>) {
                 break;
             }
             Ok(n) => {
-                let message = String::from_utf8_lossy(&buffer[..n]);
-                println!("Server Actor: Received '{}'", message.trim());
+                let data = &buffer[..n];
+                match ActorMessage::decode(data) {
+                    Ok(msg) => {
+                        println!(
+                            "Server Actor: Received command='{}', payload='{}'",
+                            msg.command, msg.payload
+                        );
 
-                if message.trim() == "Ping" {
-                    // Bloqueamos el mutex para acceder y modificar el contador
-                    let mut counter = num.lock().unwrap();
-                    let response = format!("Pong {}\n", *counter);
-                    stream.write_all(response.as_bytes()).unwrap();
-                    *counter += 1;
-                } else if message.trim() == "Stop" {
-                    println!("Server Actor: Stopping as requested.");
-                    break;
+                        if msg.command == "Ping" {
+                            let mut counter = num.lock().unwrap();
+                            let response_msg = ActorMessage {
+                                command: "Pong".to_string(),
+                                payload: counter.to_string(),
+                            };
+
+                            let mut response_buf = Vec::new();
+                            response_msg.encode(&mut response_buf).unwrap();
+
+                            stream.write_all(&response_buf).unwrap();
+                            *counter += 1;
+                        } else if msg.command == "Stop" {
+                            println!("Server Actor: Stopping as requested.");
+                            break;
+                        }
+                    }
+                    Err(e) => {
+                        eprintln!("Failed to decode Protobuf message: {:?}", e);
+                        break;
+                    }
                 }
             }
             Err(e) => {
