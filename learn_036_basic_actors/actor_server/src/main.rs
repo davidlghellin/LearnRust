@@ -6,7 +6,7 @@ use std::thread;
 use prost::Message;
 use proto_messages::ActorMessage;
 
-fn handle_client(mut stream: TcpStream, num: Arc<Mutex<i32>>) {
+fn handle_client(mut stream: TcpStream, num: &Arc<Mutex<i32>>) {
     let mut buffer = [0; 512];
     loop {
         match stream.read(&mut buffer) {
@@ -24,6 +24,7 @@ fn handle_client(mut stream: TcpStream, num: Arc<Mutex<i32>>) {
                         );
 
                         if msg.command == "Ping" {
+                            // Bloqueamos el mutex para acceder y modificar el contador
                             let mut counter = num.lock().unwrap();
                             let response_msg = ActorMessage {
                                 command: "Pong".to_string(),
@@ -41,13 +42,13 @@ fn handle_client(mut stream: TcpStream, num: Arc<Mutex<i32>>) {
                         }
                     }
                     Err(e) => {
-                        eprintln!("Failed to decode Protobuf message: {:?}", e);
+                        eprintln!("Failed to decode Protobuf message: {e:?}");
                         break;
                     }
                 }
             }
             Err(e) => {
-                eprintln!("Error reading from client: {:?}", e);
+                eprintln!("Error reading from client: {e:?}");
                 break;
             }
         }
@@ -64,9 +65,9 @@ fn main() {
         match stream {
             Ok(stream) => {
                 let num_clone = Arc::clone(&num);
-                thread::spawn(move || handle_client(stream, num_clone));
+                thread::spawn(move || handle_client(stream, &num_clone));
             }
-            Err(e) => eprintln!("Connection failed: {:?}", e),
+            Err(e) => eprintln!("Connection failed: {e:?}"),
         }
     }
 }

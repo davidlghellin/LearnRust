@@ -9,9 +9,9 @@ use proto_messages::ActorMessage;
 
 fn main() {
     let server_ip = env::var("SERVER_IP").unwrap_or_else(|_| "127.0.0.1".to_string());
-    let address = format!("{}:7878", server_ip);
+    let address = format!("{server_ip}:7878");
 
-    println!("Client: Connecting to {}", address);
+    println!("Client: Connecting to {address}");
 
     let mut stream = TcpStream::connect(&address).expect("Failed to connect to server");
 
@@ -20,7 +20,7 @@ fn main() {
 
         let ping_msg = ActorMessage {
             command: "Ping".to_string(),
-            payload: format!("Ping #{}", i),
+            payload: format!("Ping #{i}"),
         };
 
         let mut buf = Vec::new();
@@ -39,7 +39,7 @@ fn main() {
                 );
             }
             Err(e) => {
-                eprintln!("Failed to decode response: {:?}", e);
+                eprintln!("Failed to decode response: {e:?}");
             }
         }
 
@@ -50,7 +50,7 @@ fn main() {
 
     let stop_msg = ActorMessage {
         command: "Stop".to_string(),
-        payload: "".to_string(),
+        payload: String::new(),
     };
 
     let mut stop_buf = Vec::new();
