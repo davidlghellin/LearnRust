@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package proto_messages;
+
+message ActorMessage {
+    string command = 1;
+    string payload = 2;
+}
